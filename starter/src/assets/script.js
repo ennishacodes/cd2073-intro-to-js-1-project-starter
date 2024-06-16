@@ -81,11 +81,20 @@ module.exports = {
 // script.js
 
 // Global variables
-const products = [
-    { id: 1, name: 'Cherry', price: 1.00, quantity: 10, image: 'assets/images/cherry.jpg' },
-    { id: 2, name: 'Strawberry', price: 0.50, quantity: 15, image: 'assets/images/strawberry.jpg' },
-    { id: 3, name: 'Orange', price: 1.20, quantity: 20, image: 'assets/images/orange.jpg' }
-];
+const productCherry = {
+  // the properties
+  id: 1, name: 'Cherry', price: 1.00, quantity: 10, image: 'src/images/cherry.jpg.'  
+}
+
+const productStrawberry = {
+  // the properties
+  id: 2, name: 'Strawberry', price: 0.50, quantity: 15, image: 'src/images/strawberry.jpg.'  
+}
+
+const productOrange = {
+  // the properties
+  id: 3, name: 'Orange', price: 1.20, quantity: 20, image: 'src/images/orange.jpg.'  
+};
 
 let cart = [];
 let totalPaid = 0;
