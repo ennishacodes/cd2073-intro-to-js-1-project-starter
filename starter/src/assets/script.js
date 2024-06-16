@@ -81,7 +81,7 @@ module.exports = {
 // script.js
 
 // Global variables
-let products = [
+const products = [
     { id: 1, name: 'Cherry', price: 1.00, quantity: 10, image: 'assets/images/cherry.jpg' },
     { id: 2, name: 'Strawberry', price: 0.50, quantity: 15, image: 'assets/images/strawberry.jpg' },
     { id: 3, name: 'Orange', price: 1.20, quantity: 20, image: 'assets/images/orange.jpg' }
@@ -90,20 +90,6 @@ let products = [
 let cart = [];
 let totalPaid = 0;
 
-// Function to get all products
-function getProducts() {
-    return products;
-}
-
-// Function to get the cart
-function getCart() {
-    return cart;
-}
-
-// Function to get the cart total
-function getCartTotal() {
-    return cart.reduce((sum, item) => sum + item.price * item.cartQuantity, 0);
-}
 
 // Function to add product to cart
 function addProductToCart(id) {
@@ -171,6 +157,12 @@ function pay(amountPaid) {
     } else {
         throw new Error('Insufficient amount paid.');
     }
+
+
+   // Function to get the cart total
+function getCartTotal() {
+    return cart.reduce((sum, item) => sum + item.price * item.cartQuantity, 0);
+}
 }
 
 // Example usage
