@@ -79,116 +79,101 @@ module.exports = {
 }
 
 // script.js
-
-// Global variables
-const productCherry = {
-  // the properties
-  id: 1, name: 'Cherry', price: 1.00, quantity: 10, image: 'src/images/cherry.jpg.'  
-}
-
-const productStrawberry = {
-  // the properties
-  id: 2, name: 'Strawberry', price: 0.50, quantity: 15, image: 'src/images/strawberry.jpg.'  
-}
-
-const productOrange = {
-  // the properties
-  id: 3, name: 'Orange', price: 1.20, quantity: 20, image: 'src/images/orange.jpg.'  
-};
+const products = [
+  {
+    id: 1,
+    name: 'Cherry',
+    price: 1.00,
+    quantity: 10,
+    image: 'src/images/cherry.jpg',
+  },
+  {
+    id: 2,
+    name: 'Strawberry',
+    price: 2.00,
+    quantity: 20,
+    image: 'src/images/strawberry.jpg',
+  },
+  {
+    id: 3,
+    name: 'Orange',
+    price: 3.00,
+    quantity: 30,
+    image: 'src/images/orange.jpg',
+  },
+];
 
 let cart = [];
 let totalPaid = 0;
 
-
 // Function to add product to cart
 function addProductToCart(id) {
-    const product = products.find(p => p.id === id);
-    if (product && product.quantity > 0) {
-        const cartItem = cart.find(item => item.id === id);
-        if (cartItem) {
-            cartItem.cartQuantity++;
-        } else {
-            cart.push({ ...product, cartQuantity: 1 });
-        }
-        product.quantity--;
-        return true;
+  const product = products.find((p) => p.id === id);
+  if (product && product.quantity > 0) {
+    const cartItem = cart.find((item) => item.id === id);
+    if (cartItem) {
+      cartItem.cartQuantity += 1;
+    } else {
+      cart.push({ ...product, cartQuantity: 1 });
     }
-    return false;
+    product.quantity -= 1;
+    return true;
+  }
+  return false;
 }
 
 // Function to increase quantity in cart
 function increaseQuantity(id) {
-    const product = products.find(p => p.id === id);
-    const cartItem = cart.find(item => item.id === id);
-    if (cartItem && product && product.quantity > 0) {
-        cartItem.cartQuantity++;
-        product.quantity--;
-        return true;
-    }
-    return false;
+  const product = products.find((p) => p.id === id);
+  const cartItem = cart.find((item) => item.id === id);
+  if (cartItem && product && product.quantity > 0) {
+    cartItem.cartQuantity += 1;
+    product.quantity -= 1;
+    return true;
+  }
+  return false;
 }
 
 // Function to decrease quantity in cart
 function decreaseQuantity(id) {
-    const cartItem = cart.find(item => item.id === id);
-    const product = products.find(p => p.id === id);
-    if (cartItem) {
-        cartItem.cartQuantity--;
-        product.quantity++;
-        if (cartItem.cartQuantity === 0) {
-            cart = cart.filter(item => item.id !== id);
-        }
-        return true;
+  const cartItem = cart.find((item) => item.id === id);
+  const product = products.find((p) => p.id === id);
+  if (cartItem) {
+    cartItem.cartQuantity += 1;
+    product.quantity += 1;
+    if (cartItem.cartQuantity === 0) {
+      cart = cart.filter((item) => item.id !== id);
     }
-    return false;
+    return true;
+  }
+  return false;
 }
 
 // Function to remove product from cart
 function removeProductFromCart(id) {
-    const cartItem = cart.find(item => item.id === id);
-    const product = products.find(p => p.id === id);
-    if (cartItem) {
-        product.quantity += cartItem.cartQuantity;
-        cart = cart.filter(item => item.id !== id);
-        return true;
-    }
-    return false;
+  const cartItem = cart.find((item) => item.id === id);
+  const product = products.find((p) => p.id === id);
+  if (cartItem) {
+    product.quantity += cartItem.cartQuantity;
+    cart = cart.filter((item) => item.id !== id);
+    return true;
+  }
+  return false;
+}
+
+// Function to get the cart total
+function getCartTotal() {
+  return cart.reduce((sum, item) => sum + item.price * item.cartQuantity, 0);
 }
 
 // Function to handle payment
 function pay(amountPaid) {
-    const cartTotal = getCartTotal();
-    if (amountPaid >= cartTotal) {
-        totalPaid = amountPaid;
-        const change = amountPaid - cartTotal;
-        cart = [];
-        return { total: cartTotal, paid: amountPaid, change: change };
-    } else {
-        throw new Error('Insufficient amount paid.');
-    }
-
-
-   // Function to get the cart total
-function getCartTotal() {
-    return cart.reduce((sum, item) => sum + item.price * item.cartQuantity, 0);
+  const cartTotal = getCartTotal();
+  if (amountPaid >= cartTotal) {
+    totalPaid = amountPaid;
+    const change = amountPaid - cartTotal;
+    cart = [];
+    return { total: cartTotal, paid: amountPaid, change };
+  }
+  throw new Error('Insufficient amount paid.');
 }
-}
-
-// Example usage
-console.log("Initial products:", getProducts());
-console.log("Add product with ID 1 to cart:", addProductToCart(1));
-console.log("Cart after adding product:", getCart());
-console.log("Increase quantity of product with ID 1 in cart:", increaseQuantity(1));
-console.log("Cart after increasing quantity:", getCart());
-console.log("Decrease quantity of product with ID 1 in cart:", decreaseQuantity(1));
-console.log("Cart after decreasing quantity:", getCart());
-console.log("Remove product with ID 1 from cart:", removeProductFromCart(1));
-console.log("Cart after removing product:", getCart());
-
-try {
-    console.log("Pay with $20:", pay(20));
-} catch (e) {
-    console.error(e.message);
-}
-console.log("Final products:", getProducts());
-console.log("Final cart:", getCart());
