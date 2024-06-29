@@ -64,42 +64,29 @@
    npm run test
 */
 
-module.exports = {
-   products,
-   cart,
-   addProductToCart,
-   increaseQuantity,
-   decreaseQuantity,
-   removeProductFromCart,
-   cartTotal,
-   pay, 
-   emptyCart,
-   /* Uncomment the following line if completing the currency converter bonus */
-   // currency
-}
 
-// script.js
+    // script.js
 const products = [
   {
-    id: 1,
+    productId: 1,
     name: 'Cherry',
     price: 1.00,
-    quantity: 10,
-    image: 'src/images/cherry.jpg',
+    quantity: 0,
+    image: './images/cherry.jpg',
   },
   {
-    id: 2,
+    productId: 2,
     name: 'Strawberry',
     price: 2.00,
-    quantity: 20,
-    image: 'src/images/strawberry.jpg',
+    quantity: 0,
+    image: './images/strawberry.jpg',
   },
   {
-    id: 3,
+    productId: 3,
     name: 'Orange',
     price: 3.00,
-    quantity: 30,
-    image: 'src/images/orange.jpg',
+    quantity: 0,
+    image: './images/orange.jpg',
   },
 ];
 
@@ -107,23 +94,23 @@ let cart = [];
 let totalPaid = 0;
 
 // Function to add product to cart
-function addProductToCart(id) {
-  const product = products.find((p) => p.id === id);
-  if (product && product.quantity > 0) {
-    const cartItem = cart.find((item) => item.id === id);
-    if (cartItem) {
-      cartItem.cartQuantity += 1;
-    } else {
-      cart.push({ ...product, cartQuantity: 1 });
-    }
-    product.quantity -= 1;
-    return true;
-  }
-  return false;
+function getProductByIdFromList (productId, productList) {
+  return productList.find((product)=> product.productId === productId);
+
+ 
+let product = getProductByIdFromList (productId, productList);{
+product.quantity += 1
+if (!cart.included(product)) {
+cart.push(product);
+ }
+product.quantity -= 1;
+return true;
+}
+return false;
 }
 
 // Function to increase quantity in cart
-function increaseQuantity(id) {
+function increaseQuantity(productId) {
   const product = products.find((p) => p.id === id);
   const cartItem = cart.find((item) => item.id === id);
   if (cartItem && product && product.quantity > 0) {
@@ -135,14 +122,14 @@ function increaseQuantity(id) {
 }
 
 // Function to decrease quantity in cart
-function decreaseQuantity(id) {
+function decreaseQuantity(productId) {
   const cartItem = cart.find((item) => item.id === id);
   const product = products.find((p) => p.id === id);
   if (cartItem) {
     cartItem.cartQuantity += 1;
     product.quantity += 1;
     if (cartItem.cartQuantity === 0) {
-      cart = cart.filter((item) => item.id !== id);
+      removeProductFromCart (productId, any);
     }
     return true;
   }
@@ -150,12 +137,12 @@ function decreaseQuantity(id) {
 }
 
 // Function to remove product from cart
-function removeProductFromCart(id) {
+function removeProductFromCart(productId) {
   const cartItem = cart.find((item) => item.id === id);
   const product = products.find((p) => p.id === id);
   if (cartItem) {
     product.quantity += cartItem.cartQuantity;
-    cart = cart.filter((item) => item.id !== id);
+    cart.splice(cart.indexOf(product), 1);
     return true;
   }
   return false;
@@ -170,10 +157,27 @@ function getCartTotal() {
 function pay(amountPaid) {
   const cartTotal = getCartTotal();
   if (amountPaid >= cartTotal) {
-    totalPaid = amountPaid;
+    let totalPaid = amountPaid;
     const change = amountPaid - cartTotal;
     cart = [];
     return { total: cartTotal, paid: amountPaid, change };
   }
   throw new Error('Insufficient amount paid.');
+}
+
+
+
+module.exports = {
+  products,
+  cart,
+  addProductToCart,
+  increaseQuantity,
+  decreaseQuantity,
+  removeProductFromCart,
+  cartTotal,
+  pay, 
+  emptyCart,
+  getCartTotal
+  /* Uncomment the following line if completing the currency converter bonus */
+  // currency
 }
